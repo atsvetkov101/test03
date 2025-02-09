@@ -1,26 +1,32 @@
 import { ICommand } from '../interfaces/icommand';
 import { ErrorLoggingCommand } from './commands/error-logging-command';
-
-type ErrorHandlerFunction = (e: Error) => void;
-
+import { ExceptionHandlerFunction } from './exception-handler-function';
+import { ExceptionHandlerDefaultConfig } from './exception-handler-default-config';
+import { BASE_COMMAND_TYPE } from './commands/command-helper';
 export class ExceptionHandler {
 
-  static handlers: Map<string, Map<string, ErrorHandlerFunction>>;
+  static handlers: Map<string, Map<string, ExceptionHandlerFunction>>;
 
   static init() {
-    ExceptionHandler.handlers = new Map<string, Map<string, ErrorHandlerFunction>>();
-    
-    const errorHandler = new Map<string, ErrorHandlerFunction>();
-    errorHandler.set(Error.name, (e) => {
-      console.log(`Handling error of type ${Error.name} error: ${e.message}`);
-    });
+    ExceptionHandler.handlers = ExceptionHandlerDefaultConfig.getHandlers();
+  }
 
-    ExceptionHandler.handlers.set('ErrorLoggingCommand', errorHandler);
-    ExceptionHandler.handlers.set('RepeaterCommand', errorHandler);
+  static getHandlers() {
+    return ExceptionHandler.handlers;
+  }
+  static setHandlers(handlers: Map<string, Map<string, ExceptionHandlerFunction>>) {
+    ExceptionHandler.handlers = handlers;
   }
 
   public static handle( command: ICommand, error: Error) {
-    const callback = this.handlers.get(command.getType()).get(error.name);
+    let commandHandlers = this.handlers.get(command.getType());
+    if (!commandHandlers) {
+      commandHandlers = this.handlers.get(BASE_COMMAND_TYPE);
+    }
+    if (!commandHandlers) {
+      return;
+    }
+    const callback = commandHandlers.get(error.name);
     if (callback) {
       callback.call(this, error);
     }

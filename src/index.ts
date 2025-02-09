@@ -1,6 +1,4 @@
 import { ICommand } from './interfaces/icommand';
-import { ConsoleLogCommand } from './classes/commands/console-log-command';
-import { StringConcatenationCommand } from './classes/commands/string-concatenation-command';
 import { ExceptionHandler } from './classes/exception-handler';
 
 let queue: ICommand[] = [
@@ -8,6 +6,10 @@ let queue: ICommand[] = [
 
 export const setQueue = (commands: ICommand[]) => {
   queue = commands;
+};
+
+export const getQueue = () => {
+  return queue;
 };
 
 export const main = (): string => {
