@@ -1,16 +1,14 @@
 import { ICommand } from '../../interfaces/icommand';
 
 export class RepeaterCommand implements ICommand {
-  commandsQueue: ICommand[];
   commandToRepeat: ICommand;
 
-  public constructor(commandsQueue: ICommand[], commandToRepeat: ICommand) {
-    this.commandsQueue = commandsQueue;
+  public constructor(commandToRepeat: ICommand) {
     this.commandToRepeat = commandToRepeat;
   }
 
   public execute(): void {
-    this.commandsQueue.push(this.commandToRepeat);
+    this.commandToRepeat.execute();
   }
 
   getType(): string {
