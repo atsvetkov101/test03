@@ -19,16 +19,16 @@ export class ExceptionHandler {
   }
 
   public static handle( command: ICommand, error: Error) {
-    let commandHandlers = this.handlers.get(command.getType());
+    let commandHandlers = this.getHandlers().get(command.getType());
     if (!commandHandlers) {
-      commandHandlers = this.handlers.get(BASE_COMMAND_TYPE);
+      commandHandlers = this.getHandlers().get(BASE_COMMAND_TYPE);
     }
     if (!commandHandlers) {
       return;
     }
     const callback = commandHandlers.get(error.name);
     if (callback) {
-      callback.call(this, error);
+      callback.call(this, command, error);
     }
   }
 

@@ -24,4 +24,4 @@ export const main = (): string => {
   return 'Выполнение завершено'; 
 };
 
-console.log(main());
+// console.log(main());
