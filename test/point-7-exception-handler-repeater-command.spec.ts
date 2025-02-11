@@ -13,13 +13,11 @@ import { BASE_COMMAND_TYPE } from '../src/classes/commands/command-helper';
 describe('Тестирование команды, которая повторяет Команду', function() {
   describe('тест на п.7', function() {
 
-    let callCounter = 0;
     const errorHandlerFunction: ExceptionHandlerFunction = (command, e) => {
       console.log(`Command:'${command.getType()}'. Handling error of type '${Error.name}' error: '${e.message}'`);
       const queue = getQueue();
-      if (callCounter < 1) {
+      if (e?.errorNumber == 1) {
         queue.push(new RepeaterCommand(command, queue) );
-        callCounter++;
       }
     };
     
@@ -61,7 +59,6 @@ describe('Тестирование команды, которая повторя
     it('тест на п.7  Реализовать обработчик исключения, который ставит в очередь Команду - повторитель команды, выбросившей исключение.', function() {
       expect(main()).to.equal('Выполнение завершено');
       expect(errorGenerationTestCommandSpy.callCount).to.equal(2);
-      expect(callCounter).to.equal(1);
     });
   });
 });

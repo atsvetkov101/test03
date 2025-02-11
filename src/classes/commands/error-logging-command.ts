@@ -8,7 +8,7 @@ export class ErrorLoggingCommand implements ICommand {
   }
 
   public execute(): void {
-    console.log(`${this.error.message} stack:${this.error?.stack}`);
+    console.log(`${this.error.message}`);
   }
 
   getType(): string {

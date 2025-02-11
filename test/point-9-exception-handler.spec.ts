@@ -11,8 +11,8 @@ import { BASE_COMMAND_TYPE } from '../src/classes/commands/command-helper';
 import { ErrorLoggingCommand } from '../src/classes/commands/error-logging-command';
 
 
-describe('Тестирование обработки исключений п.8', function() {
-  describe('тест на п.8', function() {
+describe('Тестирование обработки исключений п.9', function() {
+  describe('тест на п.9', function() {
 
     const errorHandlerFunction: ExceptionHandlerFunction = (command, e) => {
       console.log(`Command:'${command.getType()}'. Handling error of type '${Error.name}' error: '${e.message}'`);
@@ -20,6 +20,8 @@ describe('Тестирование обработки исключений п.8'
       if (e?.errorNumber == 1) {
         queue.push(new RepeaterCommand(command, queue) );
       } else if (e?.errorNumber == 2) {
+        queue.push(new RepeaterCommand(command, queue) );
+      } else if (e?.errorNumber == 3) {
         queue.push(new ErrorLoggingCommand(e) );
       } else {
         // ничего не делать 
@@ -66,10 +68,10 @@ describe('Тестирование обработки исключений п.8'
     });
 
     // eslint-disable-next-line max-len
-    it('тест на п.8  ... при первом выбросе исключения повторить команду, при повторном выбросе исключения записать информацию в лог.', function() {
+    it('тест на п.9  Реализовать стратегию обработки исключения - повторить два раза, потом записать в лог.', function() {
       expect(main()).to.equal('Выполнение завершено');
-      expect(errorGenerationTestCommandSpy.callCount).to.equal(2);
-      expect(repeaterCommandSpy.callCount).to.equal(1);
+      expect(errorGenerationTestCommandSpy.callCount).to.equal(3);
+      expect(repeaterCommandSpy.callCount).to.equal(2);
       expect(errorLoggingCommandSpy.callCount).to.equal(1);
     });
   });
