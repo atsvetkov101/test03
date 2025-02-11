@@ -5,16 +5,16 @@ import { ErrorLoggingCommand } from './commands/error-logging-command';
 import { BASE_COMMAND_TYPE } from './commands/command-helper';
 import { RepeaterCommand } from './commands/repeater-command';
 
-const errorHandlerPount4 = (command, e) => {
+const errorHandlerPoint4 = (command, e) => {
   console.log(`Handling error of type ${e.name} error: ${e.message}`);
 };
 
-const errorHandlerPount5 = (command, e) => {
+const errorHandlerPoint5 = (command, e) => {
   console.log(`Handling error of type ${e.name} error: ${e.message}`);
   getQueue().push(new ErrorLoggingCommand(e));
 };
 
-const errorHandlerPount6 = (command, e) => {
+const errorHandlerPoint6 = (command, e) => {
   console.log(`Handling error of type ${e.name} error: ${e.message}`);
   const queue = getQueue();
   queue.push(new RepeaterCommand(command, queue));
@@ -28,7 +28,7 @@ const errorHandlerRepeatOnceFunction: ExceptionHandlerFunction = (command, e) =>
   }
 };
 
-const errorHandlerPount8 = (command, e) => {
+const errorHandlerPoint8 = (command, e) => {
   console.log(`Command:'${command.getType()}'. Handling error of type '${e.name}' error: '${e.message}'`);
   const queue = getQueue();
   if (e?.errorNumber == 1) {
@@ -40,7 +40,7 @@ const errorHandlerPount8 = (command, e) => {
   }
 };
 
-const errorHandlerPount9 = (command, e) => {
+const errorHandlerPoint9 = (command, e) => {
   console.log(`Command:'${command.getType()}'. Handling error of type '${Error.name}' error: '${e.message}'`);
   const queue = getQueue();
   if (e?.errorNumber == 1) {
@@ -73,16 +73,16 @@ export class ExceptionHandlerConfig {
   }
 
   public static getHandlersForPoint4() {
-    return ExceptionHandlerConfig.getAllHandlers(errorHandlerPount4);
+    return ExceptionHandlerConfig.getAllHandlers(errorHandlerPoint4);
   }
 
 
   public static getHandlersForPoint5() {
-    return ExceptionHandlerConfig.getAllHandlers(errorHandlerPount5);
+    return ExceptionHandlerConfig.getAllHandlers(errorHandlerPoint5);
   }
 
   public static getHandlersForPoint6() {
-    return ExceptionHandlerConfig.getAllHandlers(errorHandlerPount6);
+    return ExceptionHandlerConfig.getAllHandlers(errorHandlerPoint6);
   }
 
   public static getHandlersForPoint7 = () => {
@@ -104,7 +104,7 @@ export class ExceptionHandlerConfig {
   public static getHandlersForPoint8 = () => {
     const handlers = new Map<string, Map<string, ExceptionHandlerFunction>>();
     const errorHandler = new Map<string, ExceptionHandlerFunction>();
-    errorHandler.set(Error.name, errorHandlerPount8);
+    errorHandler.set(Error.name, errorHandlerPoint8);
     handlers.set(BASE_COMMAND_TYPE, errorHandler); 
     
     const repeaterCommandErrorHandler = new Map<string, ExceptionHandlerFunction>();
@@ -120,7 +120,7 @@ export class ExceptionHandlerConfig {
   public static getHandlersForPoint9 = () => {
     const handlers = new Map<string, Map<string, ExceptionHandlerFunction>>();
     const errorHandler = new Map<string, ExceptionHandlerFunction>();
-    errorHandler.set(Error.name, errorHandlerPount9);
+    errorHandler.set(Error.name, errorHandlerPoint9);
     handlers.set(BASE_COMMAND_TYPE, errorHandler); 
     
     const repeaterCommandErrorHandler = new Map<string, ExceptionHandlerFunction>();
