@@ -1,4 +1,6 @@
 export interface ICommand {
-  getType(): string;
+
   execute(): void;
+  getType(): string;
+  
 }

@@ -4,40 +4,29 @@ import sinon from 'sinon';
 import { main, setQueue, getQueue } from '../src';
 import { ExceptionHandler } from '../src/classes/exception-handler';
 import { ExceptionHandlerFunction } from '../src/classes/exception-handler-function';
+import { ExceptionHandlerConfig } from '../src/classes/exception-handler-config';
 import { RepeaterCommand } from '../src/classes/commands/repeater-command';
 import { TestCommand } from './test-command';
-import { BASE_COMMAND_TYPE } from '../src/classes/commands/command-helper';
-
-const errorHandlerFunction: ExceptionHandlerFunction = (command, e) => {
-  console.log(`Handling error of type ${Error.name} error: ${e.message}`);
-  const queue = getQueue();
-  queue.push(new RepeaterCommand(command, queue));
-};
 
 const getHandlers = () => {
-  const handlers = new Map<string, Map<string, ExceptionHandlerFunction>>();
-  const errorHandler = new Map<string, ExceptionHandlerFunction>();
-  errorHandler.set(Error.name, errorHandlerFunction);
-  handlers.set(BASE_COMMAND_TYPE, errorHandler); 
-  return handlers;
+  return ExceptionHandlerConfig.getHandlersForPoint6();
 };
 
 describe('Тестирование команды, которая повторяет Команду', function() {
   describe('тест на п.6', function() {
-    let errorHandlerFunctionSpy: sinon.SinonSpy;
     let testCommandSpy: sinon.SinonSpy;
+    let repeaterCommandSpy: sinon.SinonSpy;
     this.beforeAll(function() {
       const exceptionHandlerStub = sinon.stub(ExceptionHandler, 'getHandlers');
       exceptionHandlerStub.returns(getHandlers());
-
-      errorHandlerFunctionSpy = sinon.spy(errorHandlerFunction);
-
       testCommandSpy = sinon.spy(TestCommand.prototype, 'execute');
+      repeaterCommandSpy = sinon.spy(RepeaterCommand.prototype, 'execute');
       const queue = getQueue();
       queue.push(new RepeaterCommand(new TestCommand(), queue));
     });
     this.afterAll(function() {
       testCommandSpy.restore();
+      repeaterCommandSpy.restore();
       setQueue([]);
       sinon.restore();
     });
@@ -47,7 +36,7 @@ describe('Тестирование команды, которая повторя
     it('тест на п.6  Реализовать Команду, которая повторяет Команду, выбросившую исключение.', function() {
       expect(main()).to.equal('Выполнение завершено');
       expect(testCommandSpy.callCount).to.equal(1);
-      expect(errorHandlerFunctionSpy.callCount).to.equal(0);
+      expect(repeaterCommandSpy.callCount).to.equal(1);
     });
   });
 });

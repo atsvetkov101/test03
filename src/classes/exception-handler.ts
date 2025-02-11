@@ -1,14 +1,14 @@
 import { ICommand } from '../interfaces/icommand';
 import { ErrorLoggingCommand } from './commands/error-logging-command';
 import { ExceptionHandlerFunction } from './exception-handler-function';
-import { ExceptionHandlerDefaultConfig } from './exception-handler-default-config';
+import { ExceptionHandlerConfig } from './exception-handler-config';
 import { BASE_COMMAND_TYPE } from './commands/command-helper';
 export class ExceptionHandler {
 
   static handlers: Map<string, Map<string, ExceptionHandlerFunction>>;
 
   static init() {
-    ExceptionHandler.handlers = ExceptionHandlerDefaultConfig.getHandlers();
+    ExceptionHandler.handlers = ExceptionHandlerConfig.getHandlers();
   }
 
   static getHandlers() {

@@ -7,42 +7,17 @@ import { ExceptionHandlerFunction } from '../src/classes/exception-handler-funct
 import { ErrorGenerationTestCommand } from './error-generation-test-command';
 import { RepeaterCommand } from '../src/classes/commands/repeater-command';
 import { TestCommand } from './test-command';
-import { BASE_COMMAND_TYPE } from '../src/classes/commands/command-helper';
 import { ErrorLoggingCommand } from '../src/classes/commands/error-logging-command';
+import { ExceptionHandlerConfig } from '../src/classes/exception-handler-config';
 
 
 describe('Тестирование обработки исключений п.8', function() {
   describe('тест на п.8', function() {
 
-    const errorHandlerFunction: ExceptionHandlerFunction = (command, e) => {
-      console.log(`Command:'${command.getType()}'. Handling error of type '${Error.name}' error: '${e.message}'`);
-      const queue = getQueue();
-      if (e?.errorNumber == 1) {
-        queue.push(new RepeaterCommand(command, queue) );
-      } else if (e?.errorNumber == 2) {
-        queue.push(new ErrorLoggingCommand(e) );
-      } else {
-        // ничего не делать 
-      }
-    };
-    
     const getHandlers = () => {
-      const handlers = new Map<string, Map<string, ExceptionHandlerFunction>>();
-      const errorHandler = new Map<string, ExceptionHandlerFunction>();
-      errorHandler.set(Error.name, errorHandlerFunction);
-      handlers.set(BASE_COMMAND_TYPE, errorHandler); 
-      
-      const repeaterCommandErrorHandler = new Map<string, ExceptionHandlerFunction>();
-      repeaterCommandErrorHandler.set(Error.name, (command, e) => {
-        console.log(`Command:'${command.getType()}'. Handling error of type '${Error.name}' error: '${e.message}'`);
-        console.log('Не будем пытаться повторять команду RepeaterCommand');
-      });
-      handlers.set('RepeaterCommand', repeaterCommandErrorHandler);
-    
-      return handlers;
+      return ExceptionHandlerConfig.getHandlersForPoint8();
     };
-
-    
+   
     let errorGenerationTestCommandSpy: sinon.SinonSpy;
     let errorLoggingCommandSpy: sinon.SinonSpy;
     let repeaterCommandSpy: sinon.SinonSpy;

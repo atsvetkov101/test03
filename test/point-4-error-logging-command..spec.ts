@@ -3,20 +3,13 @@ import sinon from 'sinon';
 import { main, setQueue, getQueue} from '../src';
 import { ErrorLoggingCommand } from '../src/classes/commands/error-logging-command';
 import { ExceptionHandler } from '../src/classes/exception-handler';
-import { ExceptionHandlerDefaultConfig } from '../src/classes/exception-handler-default-config';
+import { ExceptionHandlerConfig } from '../src/classes/exception-handler-config';
 import { ExceptionHandlerFunction } from '../src/classes/exception-handler-function';
-import { BASE_COMMAND_TYPE } from '../src/classes/commands/command-helper';
 
 const ERROR_MESSAGE = 'test error';
 
 const getHandlers = () => {
-  const handlers = new Map<string, Map<string, ExceptionHandlerFunction>>();
-  const errorHandler = new Map<string, ExceptionHandlerFunction>();
-  errorHandler.set(Error.name, (command, e) => {
-    console.log(`Handling error of type ${Error.name} error: ${e.message}`);
-  });
-  handlers.set(BASE_COMMAND_TYPE, errorHandler); 
-  return handlers;
+  return ExceptionHandlerConfig.getHandlersForPoint4();
 };
 
 describe('Тестирование очереди команд', function() {
